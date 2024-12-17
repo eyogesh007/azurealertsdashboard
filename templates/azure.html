@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Alerts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: black;
+            color: #f9f9f9;
+        }
+        .subscription-section {
+            margin-bottom: 50px;
+        }
+        .dropdown {
+            display: none;
+            margin-top: 20px;
+        }
+        .dropdown-button {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            border: 0.1px solid white;
+            cursor: pointer;
+            border-radius: 25px;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+        }
+        .dropdown-button::after {
+            content: ' ▼';
+            float: right;
+            color: white;
+        }
+        .dropdown-button.active::after {
+            content: ' ▲';
+            float: right;
+            color: white;
+        }
+    </style>
+    <script>
+        function toggleDropdown(id, button) {
+            var dropdown = document.getElementById(id);
+            if (dropdown.style.display === "none") {
+                dropdown.style.display = "block";
+                button.classList.add("active");
+            } else {
+                dropdown.style.display = "none";
+                button.classList.remove("active");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1 style="text-align: center;">Azure Alert Dashboard</h1>
+    
+    <div>
+        {% for plot in overall_plots %}
+            <div>{{ plot | safe }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h2>Subscription Details</h2>
+        {% for subscription, plots_data in plots.items() %}
+            <div class="subscription-section">
+                <button class="dropdown-button" onclick="toggleDropdown('dropdown-{{ subscription }}', this)">Subscription: {{ subscription }}</button>
+                <div id="dropdown-{{ subscription }}" class="dropdown">
+                    <h4>Fired Alerts</h4>
+                    <div>{{ plots_data['fired'] | safe }}</div>
+                    <h4>Resolved Alerts</h4>
+                    <div>{{ plots_data['resolved'] | safe }}</div>
+                    <h4>Unresolved Alerts</h4>
+                    <div>{{ plots_data['unresolved'] | safe }}</div>
+                    <h4>Fired Alerts by Hour</h4>
+                    <div>{{ plots_data['fired_hourly'] | safe }}</div>
+                    <h4>Resolved Alerts by Hour</h4>
+                    <div>{{ plots_data['resolved_hourly'] | safe }}</div>
+                    <h4>Unresolved Alerts by Hour</h4>
+                    <div>{{ plots_data['unresolved_hourly'] | safe }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
