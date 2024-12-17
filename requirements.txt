@@ -1,0 +1,4 @@
+Flask==2.3.2
+pandas==2.1.0
+plotly==5.15.0
+azure-cli-core==2.50.0
